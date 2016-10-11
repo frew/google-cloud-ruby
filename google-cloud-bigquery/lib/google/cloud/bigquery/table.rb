@@ -674,6 +674,7 @@ module Google
                       skip_leading: skip_leading, dryrun: dryrun }
           return load_storage(file, options) if storage_url? file
           return load_local(file, options) if local_file? file
+          return load_storage_multiple(file, options) if multiple_storage_url? file
           fail Google::Cloud::Error, "Don't know how to load #{file}"
         end
 
@@ -807,6 +808,10 @@ module Google
 
           gapi = service.load_table_file dataset_id, table_id, file, options
           Job.from_gapi gapi, service
+        end
+
+        def multiple_storage_url? files
+          files.respond_to?(:all?) && files.all? {|file| self.storage_url? file}
         end
 
         def storage_url? file

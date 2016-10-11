@@ -795,6 +795,12 @@ module Google
           Job.from_gapi gapi, service
         end
 
+        def load_storage_multiple urls, options = {}
+          urls = urls.map {|url| url.to_gs_url if url.respond_to? :to_gs_url }
+          gapi = service.load_table_gs_urls dataset_id, table_id, url, options
+          Job.from_gapi gapi, service
+        end
+
         def load_local file, options = {}
           # Convert to storage URL
           file = file.to_gs_url if file.respond_to? :to_gs_url
